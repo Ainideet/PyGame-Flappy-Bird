@@ -264,12 +264,6 @@ class Game:
 
             self.score += 1
 
-        if Time - self.last > 1500:
-
-            self.last = Time
-
-            self.score += 1
-
         else:
 
             self.score += 0
