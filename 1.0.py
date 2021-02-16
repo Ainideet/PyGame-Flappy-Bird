@@ -1,4 +1,5 @@
 import pygame
+
 import random
 
 pygame.init()
@@ -34,38 +35,38 @@ class Bird(pygame.sprite.Sprite):
         self.image = images[0]
         self.image = pygame.transform.scale(self.image, (100, 85))
         self.rect = self.image.get_rect()
-        self.centre_otlet = vector(0, 0)
+        self.gravity2 = vector(0, 0)
         self.rect.center = (width / 2, height / 2)
         self.gravity = vector(0, 0)
         self.pos = vector(self.rect.center)
-        self.a_s = 0
-        # Анимирую птицу
+        self.animation_speed = 0
+        # Анимирую птицу и выбираю её начальное положение
 
     def update(self):
 
         self.gravity = vector(0, 1)
 
-        self.centre_otlet = vector(0, 0)
+        self.gravity2 = vector(0, 0)
         keys = pygame.key.get_pressed()
 
         if keys[pygame.K_SPACE]:
             self.gravity.y = -2
-            # Устанавливаю силу взлёта
-            if self.a_s + 1 < 28:
-                self.a_s += 2
-                self.image = images[self.a_s // 8]
+            # Устанавливаю скорость взлёта
+            if self.animation_speed + 1 < 28:
+                self.animation_speed += 2
+                self.image = images[self.animation_speed // 8]
                 self.image = pygame.transform.scale(self.image, (100, 85))
                 # Устанавливаю скорость анимации при удерживании пробела и размеры одного из кадров птицы
 
             else:
-                self.a_s = 0
+                self.animation_speed = 0
 
         else:
             self.image = images[0]
             self.image = pygame.transform.scale(self.image, (100, 85))
-        self.centre_otlet += self.gravity
-        self.pos += self.centre_otlet + 2 * self.gravity
-        # Окончательно устанавливаю гравитацию
+        self.gravity2 += self.gravity
+        self.pos += self.gravity2 + 2 * self.gravity
+        # Устанавливаю гравитацию
         if self.pos.y <= 0 + self.rect.width / 2:
             self.pos.y = 0 + self.rect.width / 2
 
@@ -189,15 +190,15 @@ class Game:
 
             for event in pygame.event.get():
 
-                if event.type == pygame.QUIT:
-                    pygame.quit()
-
-                    quit()
-
                 if event.type == pygame.KEYDOWN:
 
                     if event.key == pygame.K_RETURN:
                         wait = 0
+
+                if event.type == pygame.QUIT:
+                    pygame.quit()
+
+                    quit()
 
             self.msg("Paused", width - 100, height - 100, Blue, 40)
             # Осуществляю паузу
@@ -245,7 +246,7 @@ class Game:
         hit1 = pygame.sprite.spritecollide(self.bird, self.pp1_1, False, pygame.sprite.collide_mask)
 
         hit2 = pygame.sprite.spritecollide(self.bird, self.pp2_1, False, pygame.sprite.collide_mask)
-        # Осуществляю столкновение с труб ами
+        # Осуществляю столкновение с трубами
         if hit1 or hit2:
             self.GameOver()
 
@@ -286,12 +287,12 @@ class Game:
                 pygame.quit()
 
                 quit()
-                # Оптимизирую кнопку выхода
+
             if event.type == pygame.KEYDOWN:
 
                 if event.key == pygame.K_RETURN:
                     self.pause()
-                    # Оптимизирую паузу
+
 
     def run(self):
 
@@ -310,4 +311,4 @@ game = Game()
 while game.run:
     game.S_and_M()
     game.run()
-            # Активирую все элементы игры
+    # Активирую все элементы игры
